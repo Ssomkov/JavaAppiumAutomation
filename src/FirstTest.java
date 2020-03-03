@@ -22,7 +22,7 @@ public class FirstTest {
                 apkFilePath = "C:\\Users\\ssomk\\IdeaProjects\\JavaAppiumAutomation\\apks\\wiki.apk";
                 break;
             case MacOS:
-                apkFilePath = "";
+                apkFilePath = "/Users/hairbaton/Documents/IdeaProjects/JavaAppiumAutomation/apks/wiki.apk";
                 break;
             default:
                 apkFilePath = "C:\\Users\\ssomk\\IdeaProjects\\JavaAppiumAutomation\\apks\\wiki.apk";
