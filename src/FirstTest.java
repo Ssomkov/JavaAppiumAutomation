@@ -18,6 +18,10 @@ public class FirstTest {
     private AppiumDriver driver;
     private String apkFilePath;
 
+    private By searchFieldFirstPage = By.xpath("//*[@resource-id='org.wikipedia:id/search_container']");
+    private By searchFieldSecondPage = By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']");
+    private By closeButtonSecondPage = By.xpath("//*[@resource-id='org.wikipedia:id/search_close_btn']");
+    private By searchResultsBlock = By.xpath("//*[@resource-id='org.wikipedia:id/fragment_search_results']");
     private By searchFieldFirstPagePlaceholder = By.xpath("//*[@resource-id='org.wikipedia:id/search_container']//*[@class='android.widget.TextView']");
 
     @Before
@@ -65,6 +69,16 @@ public class FirstTest {
                 textFromField.contains("Search"));
     }
 
+    @Test
+    public void checkCancelSearch() {
+        boolean isSearchResultsNotPresent = false;
+        waitForElementAndClick(searchFieldFirstPage, "Поле ввода 'Search string' не найдено", 10);
+        waitForElementAndSendKeys(searchFieldSecondPage, "Поле ввода 'Search Wikipedia' не найдено", "Japan", 5);
+        waitForElementAndClick(closeButtonSecondPage, "Кнопка закрытия результатов поиска не найдена", 5);
+        isSearchResultsNotPresent = waitForElementNotPresent(searchResultsBlock, "Блок с результатами поиска должен быть скрыт", 5);
+        Assert.assertTrue("Блок с результатами поиска должен быть скрыт", isSearchResultsNotPresent);
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeOutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -77,8 +91,24 @@ public class FirstTest {
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
+    private boolean waitForElementNotPresent(By by, String errorMessage, long timeOutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
     private String waitForElementAndGetText(By by, String errorMessage, long timeOutInSeconds) {
         WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
         return element.getText();
+    }
+
+    private void waitForElementAndClick(By by, String errorMessage, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+        element.click();
+    }
+
+    private void waitForElementAndSendKeys(By by, String errorMessage, String value, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+        element.sendKeys(value);
     }
 }
