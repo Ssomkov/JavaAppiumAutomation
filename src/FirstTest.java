@@ -62,8 +62,10 @@ public class FirstTest {
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", ".main.MainActivity");
         capabilities.setCapability("app", apkFilePath);
+        capabilities.setCapability("orientation", "PORTRAIT");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+        driver.rotate(ScreenOrientation.PORTRAIT);
 
         //skip start window
         WebElement skipButton = driver.findElementByXPath("//*[@resource-id='org.wikipedia:id/fragment_onboarding_skip_button']");
@@ -72,7 +74,6 @@ public class FirstTest {
 
     @After
     public void tearDown() {
-        driver.rotate(ScreenOrientation.PORTRAIT);
         driver.quit();
     }
 
