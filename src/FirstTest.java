@@ -152,8 +152,28 @@ public class FirstTest {
         Assert.assertEquals("Заголовок статьи не совпадает", firstArticleName, titleOfFirstArticle);
     }
 
+    @Test
+    public void checkArticleTitle() {
+        String searchValue = "Java";
+        String articleName = "Java (programming language)";
+        waitForElementAndClick(searchFieldFirstPage, "Поле ввода 'Search string' не найдено", 10);
+        waitForElementAndSendKeys(searchFieldSecondPage, "Поле ввода 'Search Wikipedia' не найдено", searchValue, 5);
+        waitForElementPresent(searchResultsBlock, "Блок с результатами поиска не найден", 5);
+        By article = By.xpath(String.format(searhResultTitleItem, articleName));
+        swipeUpToFindElement(article, "Не найдена статья: " + articleTitle, 10);
+        waitForElementAndClick(article, "Не удалось выбрать статью: " + articleTitle, 5);
+        By title = By.xpath(String.format(articleTitle, articleName));
+        checkForElementPresent(title, "Не найден заголовок статьи: " + articleName);
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeOutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private WebElement checkForElementPresent(By by, String errorMessage) {
+        WebDriverWait wait = new WebDriverWait(driver, 0);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
