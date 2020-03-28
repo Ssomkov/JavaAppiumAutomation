@@ -2,13 +2,17 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainPageObject {
 
@@ -18,59 +22,64 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage, long timeOutInSeconds) {
+    public WebElement waitForElementPresent(String locator, String errorMessage, long timeOutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public WebElement checkForElementPresent(By by, String errorMessage) {
+    public WebElement checkForElementPresent(String locator, String errorMessage) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, 0);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage) {
+    public WebElement waitForElementPresent(String locator, String errorMessage) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public boolean waitForElementNotPresent(By by, String errorMessage, long timeOutInSeconds) {
+    public boolean waitForElementNotPresent(String locator, String errorMessage, long timeOutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
-    public String waitForElementAndGetText(By by, String errorMessage, long timeOutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+    public String waitForElementAndGetText(String locator, String errorMessage, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeOutInSeconds);
         return element.getText();
     }
 
-    public void waitForElementAndClick(By by, String errorMessage, long timeOutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+    public void waitForElementAndClick(String locator, String errorMessage, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeOutInSeconds);
         element.click();
     }
 
-    public void waitForElementAndSendKeys(By by, String errorMessage, String value, long timeOutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+    public void waitForElementAndSendKeys(String locator, String errorMessage, String value, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeOutInSeconds);
         element.sendKeys(value);
     }
 
-    public String waitForElementAndGetTagName(By by, String errorMessage, long timeOutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeOutInSeconds);
+    public String waitForElementAndGetTagName(String locator, String errorMessage, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeOutInSeconds);
         return element.getTagName();
     }
 
-    public int getAmountOfElements(By by) {
+    public int getAmountOfElements(String locator) {
+        By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return elements.size();
     }
 
-    public void assertElementNotPresent(By by, String errorMessage) {
-        int amountOfElements = getAmountOfElements(by);
+    public void assertElementNotPresent(String locator, String errorMessage) {
+        int amountOfElements = getAmountOfElements(locator);
         if (amountOfElements > 0) {
-            String defaultMeaasge = "An element '" + by.toString() + "' suppused to be not present";
+            String defaultMeaasge = "An element '" + locator.toString() + "' suppused to be not present";
             throw new AssertionError(defaultMeaasge + " " + errorMessage);
         }
     }
@@ -83,9 +92,9 @@ public class MainPageObject {
         int endY = (int) (size.getHeight() * 0.2);
 
         touchAction
-                .press(x, startY)
-                .waitAction(timeOfSwipe)
-                .moveTo(x, endY)
+                .press(PointOption.point(x, startY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(timeOfSwipe)))
+                .moveTo(PointOption.point(x, endY))
                 .release()
                 .perform();
     }
@@ -94,11 +103,12 @@ public class MainPageObject {
         swipeUp(200);
     }
 
-    public void swipeUpToFindElement(By by, String errorMessage, int maxSwipes) {
+    public void swipeUpToFindElement(String locator, String errorMessage, int maxSwipes) {
+        By by = this.getLocatorByString(locator);
         int alreadySwiped = 0;
         while (driver.findElements(by).size() == 0) {
             if (alreadySwiped > maxSwipes) {
-                waitForElementPresent(by, "Элемент не найден свайпами. \n" + errorMessage, 0);
+                waitForElementPresent(locator, "Элемент не найден свайпами. \n" + errorMessage, 0);
                 return;
             }
             swipeUpQuick();
@@ -106,8 +116,8 @@ public class MainPageObject {
         }
     }
 
-    public void swipeElementToLeft(By by, String errorMessage) {
-        WebElement element = waitForElementPresent(by, errorMessage, 10);
+    public void swipeElementToLeft(String locator, String errorMessage) {
+        WebElement element = waitForElementPresent(locator, errorMessage, 10);
 
         int leftX = element.getLocation().getX();
         int rigtX = leftX + element.getSize().getWidth();
@@ -117,10 +127,22 @@ public class MainPageObject {
 
         TouchAction touchAction = new TouchAction(driver);
         touchAction
-                .press(rigtX, middleY)
-                .waitAction(300)
-                .moveTo(leftX, middleY)
+                .press(PointOption.point(rigtX, middleY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                .moveTo(PointOption.point(leftX, middleY))
                 .release()
                 .perform();
+    }
+
+    private By getLocatorByString(String locatorWithType) {
+        String[] explodedLocator = locatorWithType.split(Pattern.quote(":"), 2);
+        String byType = explodedLocator[0];
+        String locator = explodedLocator[1];
+
+        if (byType.equals("xpath")) {
+            return By.xpath(locator);
+        } else if (byType.equals("id")) {
+            return By.id(locator);
+        } else throw new IllegalArgumentException("Не удалось получить тип локатора: " + locatorWithType);
     }
 }
