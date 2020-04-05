@@ -1,18 +1,22 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String ARTICLE_TITLE_TPL = "xpath://android.view.View[@content-desc='%s']";
-    private static final String BOOKMARK_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/article_menu_bookmark']";
-    private static final String BOOKMARK_POPUP_GOT_IT_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/onboarding_button']";
-    private static final String BOOKMARK_MENU_CREATE_NEW_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/create_button']";
-    private static final String BOOKMARK_CREATE_LIST_NAME_FIELD = "xpath://*[@resource-id='org.wikipedia:id/text_input']";
-    private static final String BOOKMARK_CREATE_LIST_OK_BUTTON = "xpath://*[@resource-id='android:id/button1']";
-    private static final String BOOKMARK_MENU_LIST_ITEM_TITLE_TPL = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='%s']";
-    private static final String SHOW_OVERFLOW_MENU_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/page_toolbar_button_show_overflow_menu']";
-    private static final String OVERFLOW_MENU_READING_LISTS_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/page_action_overflow_reading_lists']";
+    protected static String
+            ARTICLE_TITLE_TPL,
+            BOOKMARK_BUTTON,
+            BOOKMARK_POPUP_GOT_IT_BUTTON,
+            BOOKMARK_MENU_CREATE_NEW_BUTTON,
+            BOOKMARK_CREATE_LIST_NAME_FIELD,
+            BOOKMARK_CREATE_LIST_OK_BUTTON,
+            BOOKMARK_MENU_LIST_ITEM_TITLE_TPL,
+            SHOW_OVERFLOW_MENU_BUTTON,
+            OVERFLOW_MENU_READING_LISTS_BUTTON,
+            CLOSE_ARTICLE_BUTTON,
+            OPTIONS_ADD_TO_MY_LIST_BUTTON;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -58,6 +62,9 @@ public class ArticlePageObject extends MainPageObject {
 
     public String getValueArticleTitle(String articleTitle) {
         String title = String.format(ARTICLE_TITLE_TPL, articleTitle);
-        return this.waitForElementAndGetTagName(title, "Не удалось получить заголовок статьи: " + articleTitle, 10);
+        if (Platform.getInstance().isAndroid()) {
+            return this.waitForElementAndGetTagName(title, "Не удалось получить заголовок статьи: " + articleTitle, 10);
+        } else
+            return this.waitForElementAndGetAttributeName(title, "name", "Не удалось получить заголовок статьи: " + articleTitle, 10);
     }
 }

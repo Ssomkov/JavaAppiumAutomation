@@ -2,14 +2,15 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class SearchPageObject extends MainPageObject {
+public abstract class SearchPageObject extends MainPageObject {
 
-    private static final String SEARCH_INIT_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/search_container']//*[@class='android.widget.TextView']";
-    private static final String SEARCH_INPUT = "xpath://*[@resource-id='org.wikipedia:id/search_src_text']";
-    private static final String SEARCH_INIT_ELEMENT_PLACEHOLDER = "xpath://*[@resource-id='org.wikipedia:id/search_container']//*[@class='android.widget.TextView']";
-    private static final String CLOSE_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/search_close_btn']";
-    private static final String SEARCH_RESULTS_BLOCK = "xpath://*[@resource-id='org.wikipedia:id/fragment_search_results']";
-    private static final String SEARCH_RESULT_TITLE_ITEM_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='%s']";
+    protected static String
+            SEARCH_INIT_ELEMENT,
+            SEARCH_INPUT,
+            SEARCH_INIT_ELEMENT_PLACEHOLDER,
+            CLOSE_BUTTON,
+            SEARCH_RESULTS_BLOCK,
+            SEARCH_RESULT_TITLE_ITEM_TPL;
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);

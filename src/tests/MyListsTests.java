@@ -2,6 +2,8 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.*;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
@@ -14,7 +16,7 @@ public class MyListsTests extends CoreTestCase {
         String firstArticleName = "Java (programming language)";
         String secondArticleName = "Oracle Corporation";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         //поиск 1 статьи
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(firstSearchValue);
@@ -23,7 +25,7 @@ public class MyListsTests extends CoreTestCase {
         searchPageObject.swipeToArticle(firstArticleName);
         searchPageObject.clickArticleTitle(firstArticleName);
         //выбор закладок
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.clickBookMarkButton();
         //закрытие всплывающего окна
         articlePageObject.clickGotItButton();

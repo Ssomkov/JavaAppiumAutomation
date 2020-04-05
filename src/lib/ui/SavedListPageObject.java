@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 
 public class SavedListPageObject extends MainPageObject {
 
@@ -12,7 +13,9 @@ public class SavedListPageObject extends MainPageObject {
 
     public void deleteArticleBySwipeToLeft(String articleTitle) {
         String title = String.format(ARTICLE_TITLE_TPL, articleTitle);
-        this.swipeUpToFindElement(title, "Не найдена статья: " + articleTitle, 10);
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpToFindElement(title, "Не найдена статья: " + articleTitle, 10);
+        } else swipeUpTillElementAppear(title, "Не найдена статья: " + articleTitle, 40);
         this.swipeElementToLeft(title, "Не удалось свайпнуть элемент: " + articleTitle);
     }
 
