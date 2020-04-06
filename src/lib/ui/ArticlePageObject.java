@@ -16,7 +16,8 @@ abstract public class ArticlePageObject extends MainPageObject {
             SHOW_OVERFLOW_MENU_BUTTON,
             OVERFLOW_MENU_READING_LISTS_BUTTON,
             CLOSE_ARTICLE_BUTTON,
-            OPTIONS_ADD_TO_MY_LIST_BUTTON;
+            OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            OPTIONS_SAVED_LISTS_BUTTON;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -66,5 +67,13 @@ abstract public class ArticlePageObject extends MainPageObject {
             return this.waitForElementAndGetTagName(title, "Не удалось получить заголовок статьи: " + articleTitle, 10);
         } else
             return this.waitForElementAndGetAttributeName(title, "name", "Не удалось получить заголовок статьи: " + articleTitle, 10);
+    }
+
+    public void addArticlesToMySaved() {
+        this.waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Не удалось найти опцию добавления статьи в сохраненный список", 10);
+    }
+
+    public void openSavedArticlesList() {
+        this.waitForElementAndClick(OPTIONS_SAVED_LISTS_BUTTON, "Не удалось найти опцию открытия списка сохраненных статей", 10);
     }
 }

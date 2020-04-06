@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 
 public abstract class SearchPageObject extends MainPageObject {
 
@@ -18,8 +19,8 @@ public abstract class SearchPageObject extends MainPageObject {
 
     public void initSearchInput() {
         this.waitForElementAndClick(SEARCH_INIT_ELEMENT,
-                "Не удалось найти строку инициализации поиска", 5);
-        this.waitForElementPresent(SEARCH_INIT_ELEMENT,
+                "Не удалось найти строку инициализации поиска", 100);
+        this.waitForElementPresent(SEARCH_INPUT,
                 "Не удалось найти строку инициализации поиска после клика");
     }
 
@@ -47,7 +48,9 @@ public abstract class SearchPageObject extends MainPageObject {
 
     public void swipeToArticle(String articleTitle) {
         String article = String.format(SEARCH_RESULT_TITLE_ITEM_TPL, articleTitle);
-        this.swipeUpToFindElement(article, "Не найдена статья: " + articleTitle, 10);
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpToFindElement(article, "Не найдена статья: " + articleTitle, 10);
+        } else this.swipeUpTillElementAppear(article, "Не найдена статья: " + articleTitle, 10);
     }
 
     public void clickArticleTitle(String articleTitle) {

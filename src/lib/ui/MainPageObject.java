@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import lib.Platform;
+
 public class MainPageObject {
 
     protected AppiumDriver driver;
@@ -39,7 +41,7 @@ public class MainPageObject {
 
     public WebElement waitForElementPresent(String locator, String errorMessage) {
         By by = this.getLocatorByString(locator);
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
@@ -134,9 +136,14 @@ public class MainPageObject {
         TouchAction touchAction = new TouchAction(driver);
         touchAction
                 .press(PointOption.point(rigtX, middleY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
-                .moveTo(PointOption.point(leftX, middleY))
-                .release()
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
+        if (Platform.getInstance().isAndroid()) {
+            touchAction.moveTo(PointOption.point(leftX, middleY));
+        } else {
+            int offsetX = (-1 * element.getSize().getWidth());
+            touchAction.moveTo(PointOption.point(offsetX, 0));
+        }
+        touchAction.release()
                 .perform();
     }
 
@@ -171,5 +178,21 @@ public class MainPageObject {
                 .getY();
         int screen_size_by_y = driver.manage().window().getSize().getHeight();
         return element_location_by_y < screen_size_by_y;
+    }
+
+    public void ckickElementToTheRightUpperCorner(String loator, String errorMessage) {
+        WebElement element = this.waitForElementPresent(loator + "/..", errorMessage);
+
+        int rightX = element.getLocation().getX();
+        int upperY = element.getLocation().getY();
+        int lowerY = upperY + element.getSize().getHeight();
+        int middleY = (upperY + lowerY) / 2;
+        int width = element.getSize().getWidth();
+
+        int pointToClickX = (rightX + width) - 3;
+        int pointToClickY = middleY;
+
+        TouchAction action = new TouchAction(driver);
+        action.tap(PointOption.point(pointToClickX, pointToClickY)).perform();
     }
 }

@@ -2,9 +2,11 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class PopupObject extends MainPageObject {
+abstract public class PopupObject extends MainPageObject {
 
-    private static final String SYNC_READING_LIST_NO_THANKS_BUTTON = "xpath://*[@resource-id='android:id/button2']";
+    static String
+            SYNC_READING_LIST_NO_THANKS_BUTTON,
+            CLOSE_SYNC_LIST_WINDOW_BUTTON;
 
 
     public PopupObject(AppiumDriver driver) {
@@ -13,5 +15,9 @@ public class PopupObject extends MainPageObject {
 
     public void clickSyncReadingListNoThanksButton() {
         this.waitForElementAndClick(SYNC_READING_LIST_NO_THANKS_BUTTON, "Не найдена кнопка 'No thanks'  в окне синхронизации списков", 5);
+    }
+
+    public void clickCloseSyncReadingListWindowButton() {
+        this.waitForElementAndClick(CLOSE_SYNC_LIST_WINDOW_BUTTON, "Не найдена кнопка 'x'  в окне синхронизации списков", 5);
     }
 }

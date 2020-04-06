@@ -3,9 +3,9 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import lib.Platform;
 
-public class SavedListPageObject extends MainPageObject {
+abstract public class SavedListPageObject extends MainPageObject {
 
-    private static final String ARTICLE_TITLE_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='%s']";
+    static String ARTICLE_TITLE_TPL;
 
     public SavedListPageObject(AppiumDriver driver) {
         super(driver);
@@ -16,6 +16,9 @@ public class SavedListPageObject extends MainPageObject {
         if (Platform.getInstance().isAndroid()) {
             this.swipeUpToFindElement(title, "Не найдена статья: " + articleTitle, 10);
         } else swipeUpTillElementAppear(title, "Не найдена статья: " + articleTitle, 40);
+        if (Platform.getInstance().isIOS()) {
+            this.ckickElementToTheRightUpperCorner(title, "Не найдена статья: " + articleTitle);
+        }
         this.swipeElementToLeft(title, "Не удалось свайпнуть элемент: " + articleTitle);
     }
 

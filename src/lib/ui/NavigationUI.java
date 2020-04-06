@@ -2,9 +2,10 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class NavigationUI extends MainPageObject {
+abstract public class NavigationUI extends MainPageObject {
 
-    private static final String RETURN_TO_SEARCH_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
+    protected static String
+            RETURN_TO_SEARCH_BUTTON;
 
     public NavigationUI(AppiumDriver driver) {
         super(driver);

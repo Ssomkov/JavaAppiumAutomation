@@ -48,6 +48,7 @@ public class Platform {
         capabilities.setCapability("platformVersion", "13.3");
         capabilities.setCapability("app", "/Users/hairbaton/Documents/IdeaProjects/JavaAppiumAutomation/apks/wiki.app");
         capabilities.setCapability("orientation", "PORTRAIT");
+        capabilities.setCapability("newCommandTimeout", 360);
 
         return capabilities;
     }
